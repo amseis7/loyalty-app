@@ -19,7 +19,7 @@ export interface CustomerWithStamps extends Customer {
 }
 
 export async function findCustomerByPhone(phone: string): Promise<Customer | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('customers')
     .select('*')
@@ -31,7 +31,7 @@ export async function findCustomerByPhone(phone: string): Promise<Customer | nul
 }
 
 export async function findCustomerByToken(token: string): Promise<CustomerWithStamps | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: customer, error: customerError } = await supabase
     .from('customers')
@@ -70,7 +70,7 @@ export async function findCustomerByToken(token: string): Promise<CustomerWithSt
 }
 
 export async function getCustomerWithStamps(customerId: string): Promise<CustomerWithStamps | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: customer, error: customerError } = await supabase
     .from('customers')
@@ -109,7 +109,7 @@ export async function getCustomerWithStamps(customerId: string): Promise<Custome
 }
 
 export async function createCustomer(name: string, phone: string): Promise<Customer> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('customers')
     .insert({ name: name.trim(), phone: phone.trim() })
@@ -121,7 +121,7 @@ export async function createCustomer(name: string, phone: string): Promise<Custo
 }
 
 export async function addStamp(customerId: string, addedBy: string): Promise<void> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { error } = await supabase
     .from('stamps')
     .insert({ customer_id: customerId, added_by: addedBy })
@@ -130,7 +130,7 @@ export async function addStamp(customerId: string, addedBy: string): Promise<voi
 }
 
 export async function redeemReward(customerId: string, redeemedBy: string): Promise<void> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { error } = await supabase
     .from('redemptions')
     .insert({ customer_id: customerId, redeemed_by: redeemedBy })
