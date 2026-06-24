@@ -3,6 +3,7 @@ import AdminActions from './AdminActions'
 import CodeSearch from './CodeSearch'
 import RegisterForm from './RegisterForm'
 import CustomerList from './CustomerList'
+import Modal from './Modal'
 import { getCustomerWithStamps, findCustomerByShortCode, getAllCustomers } from '@/lib/customers'
 
 interface AdminPageProps {
@@ -37,30 +38,36 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </div>
       )}
 
-      {showRegister && <RegisterForm />}
-
-      {customer && (
-        <div className="bg-slate-800 border border-blue-900 rounded-xl p-5">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h2 className="text-xl font-bold text-white">{customer.name}</h2>
-              <p className="text-slate-500 text-sm">📱 {customer.phone}</p>
-            </div>
-            <div className="bg-blue-950 rounded-lg px-3 py-2 text-center">
-              <div className="text-blue-300 text-2xl font-black">{customer.activeStamps}</div>
-              <div className="text-blue-500 text-xs">/ 10 sellos</div>
-            </div>
-          </div>
-
-          <div className="mb-5">
-            <StampGrid activeStamps={customer.activeStamps} total={10} />
-          </div>
-
-          <AdminActions customer={customer} />
-        </div>
+      {showRegister && (
+        <Modal>
+          <RegisterForm />
+        </Modal>
       )}
 
-      <CustomerList customers={customers} />
+      {customer && (
+        <Modal>
+          <div className="bg-slate-800 border border-blue-900 rounded-xl p-5">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h2 className="text-xl font-bold text-white">{customer.name}</h2>
+                <p className="text-slate-500 text-sm">📱 {customer.phone}</p>
+              </div>
+              <div className="bg-blue-950 rounded-lg px-3 py-2 text-center">
+                <div className="text-blue-300 text-2xl font-black">{customer.activeStamps}</div>
+                <div className="text-blue-500 text-xs">/ 10 sellos</div>
+              </div>
+            </div>
+
+            <div className="mb-5">
+              <StampGrid activeStamps={customer.activeStamps} total={10} />
+            </div>
+
+            <AdminActions customer={customer} />
+          </div>
+        </Modal>
+      )}
+
+      {!customer && !showRegister && <CustomerList customers={customers} />}
     </div>
   )
 }
