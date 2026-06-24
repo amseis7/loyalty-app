@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { findCustomerByToken } from '@/lib/customers'
 import StampGrid from '@/components/StampGrid'
 import CardActions from './CardActions'
+import StampConfetti from './StampConfetti'
 
 interface CardPageProps {
   params: Promise<{ token: string }>
@@ -21,6 +22,7 @@ export default async function CardPage({ params }: CardPageProps) {
   return (
     <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center px-4">
       <div className="relative w-full max-w-sm text-center">
+        {customer.stamp_animation_pending && <StampConfetti token={token} />}
         <CardActions cardUrl={cardUrl} customerName={customer.name} />
 
         {/* Header */}

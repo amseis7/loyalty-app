@@ -10,6 +10,7 @@ export interface Customer {
   card_token: string
   short_code: string
   created_at: string
+  stamp_animation_pending: boolean
 }
 
 export interface CustomerWithStamps extends Customer {
@@ -186,8 +187,12 @@ export async function addStamp(customerId: string, addedBy: string): Promise<voi
   const { error } = await supabase
     .from('stamps')
     .insert({ customer_id: customerId, added_by: addedBy })
-
   if (error) throw error
+
+  await supabase
+    .from('customers')
+    .update({ stamp_animation_pending: true })
+    .eq('id', customerId)
 }
 
 export async function redeemReward(customerId: string, redeemedBy: string): Promise<void> {
