@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { addStamp, redeemReward, createCustomer } from '@/lib/customers'
+import { addStamp, redeemReward, createCustomer, deleteCustomer } from '@/lib/customers'
 import { revalidatePath } from 'next/cache'
 
 export async function addStampAction(customerId: string) {
@@ -22,10 +22,19 @@ export async function redeemRewardAction(customerId: string) {
   revalidatePath('/admin')
 }
 
+export async function deleteCustomerAction(customerId: string): Promise<void> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('No autenticado')
+
+  await deleteCustomer(customerId)
+  revalidatePath('/admin')
+}
+
 export async function createCustomerAction(
   name: string,
   phone: string
-): Promise<{ short_code: string }> {
+): Promise<{ short_code: string; card_token: string; name: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('No autenticado')
@@ -33,7 +42,7 @@ export async function createCustomerAction(
   try {
     const customer = await createCustomer(name, phone)
     revalidatePath('/admin')
-    return { short_code: customer.short_code }
+    return { short_code: customer.short_code, card_token: customer.card_token, name: customer.name }
   } catch (err: unknown) {
     const pgErr = err as { code?: string }
     if (pgErr.code === '23505') throw new Error('DUPLICATE_PHONE')

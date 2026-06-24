@@ -1,69 +1,46 @@
-import Link from 'next/link'
 import StampGrid from '@/components/StampGrid'
 import AdminActions from './AdminActions'
-import { getCustomerWithStamps, findCustomerByPhone } from '@/lib/customers'
+import CodeSearch from './CodeSearch'
+import RegisterForm from './RegisterForm'
+import CustomerList from './CustomerList'
+import { getCustomerWithStamps, findCustomerByShortCode, getAllCustomers } from '@/lib/customers'
 
 interface AdminPageProps {
-  searchParams: Promise<{ phone?: string; customerId?: string }>
+  searchParams: Promise<{ code?: string; customerId?: string; new?: string }>
 }
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
-  const { phone, customerId } = await searchParams
+  const { code, customerId, new: isNew } = await searchParams
 
   let customer = null
 
   if (customerId) {
     customer = await getCustomerWithStamps(customerId)
-  } else if (phone) {
-    const found = await findCustomerByPhone(phone)
-    if (found) {
-      customer = await getCustomerWithStamps(found.id)
-    }
+  } else if (code) {
+    customer = await findCustomerByShortCode(code)
   }
 
-  const notFound = phone && !customer
+  const notFound = code && !customer
+  const showRegister = isNew === '1' || notFound
+
+  const customers = await getAllCustomers()
 
   return (
-    <div>
-      {/* Search form */}
-      <form action="/admin" method="get" className="mb-6">
-        <label className="block text-xs text-slate-400 uppercase tracking-wider mb-2">
-          Buscar cliente por teléfono
-        </label>
-        <div className="flex gap-2">
-          <input
-            name="phone"
-            type="tel"
-            defaultValue={phone}
-            placeholder="ej. 5512345678"
-            className="flex-1 bg-slate-800 text-white border border-slate-700 rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-blue-500"
-          />
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-lg transition-colors"
-          >
-            Buscar
-          </button>
-        </div>
-      </form>
+    <div className="space-y-6">
+      <CodeSearch defaultCode={code} />
 
-      {/* Customer not found */}
-      {notFound && (
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center">
-          <p className="text-slate-400 mb-3">No se encontró ningún cliente con ese número.</p>
-          <Link
-            href={`/admin/customers/new?phone=${phone}`}
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
-          >
-            Registrar cliente nuevo
-          </Link>
+      {!showRegister && !customer && (
+        <div className="text-center">
+          <a href="/admin?new=1" className="text-blue-400 hover:text-blue-300 text-sm underline">
+            + Registrar nuevo cliente
+          </a>
         </div>
       )}
 
-      {/* Customer found */}
+      {showRegister && <RegisterForm />}
+
       {customer && (
         <div className="bg-slate-800 border border-blue-900 rounded-xl p-5">
-          {/* Header */}
           <div className="flex justify-between items-start mb-4">
             <div>
               <h2 className="text-xl font-bold text-white">{customer.name}</h2>
@@ -75,22 +52,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             </div>
           </div>
 
-          {/* Stamp grid */}
           <div className="mb-5">
             <StampGrid activeStamps={customer.activeStamps} total={10} />
           </div>
 
-          {/* Actions — client component for toast feedback */}
           <AdminActions customer={customer} />
         </div>
       )}
 
-      {/* Initial state */}
-      {!phone && !customer && (
-        <p className="text-slate-600 text-center text-sm mt-4">
-          Ingresa un número de teléfono para buscar o registrar un cliente.
-        </p>
-      )}
+      <CustomerList customers={customers} />
     </div>
   )
 }

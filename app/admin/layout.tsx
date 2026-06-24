@@ -9,9 +9,7 @@ export default async function AdminLayout({
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/admin/login')
-  }
+  if (!user) redirect('/admin/login')
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
@@ -22,7 +20,7 @@ export default async function AdminLayout({
             {process.env.NEXT_PUBLIC_BUSINESS_NAME ?? 'Mi Café'}
           </span>
         </div>
-        <span className="text-slate-400 text-xs">{user.email}</span>
+        {user && <span className="text-slate-400 text-xs">{user.email}</span>}
       </header>
       <main className="max-w-lg mx-auto px-4 py-6">
         {children}

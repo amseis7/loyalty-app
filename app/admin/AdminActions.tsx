@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import Toast from '@/components/Toast'
+import CustomerQR from './CustomerQR'
 import { addStampAction, redeemRewardAction } from './actions'
 import type { CustomerWithStamps } from '@/lib/customers'
 
@@ -57,6 +58,7 @@ export default function AdminActions({ customer }: AdminActionsProps) {
             {isPending ? 'Guardando...' : '✚ Agregar Sello'}
           </button>
         )}
+        <CustomerQR cardToken={customer.card_token} customerName={customer.name} />
       </div>
 
       {toast && (

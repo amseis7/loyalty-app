@@ -148,6 +148,27 @@ export async function getCustomerWithStamps(customerId: string): Promise<Custome
   }
 }
 
+export async function getAllCustomers(): Promise<Customer[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('customers')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data ?? []
+}
+
+export async function deleteCustomer(customerId: string): Promise<void> {
+  const supabase = await createClient()
+  const { error, count } = await supabase
+    .from('customers')
+    .delete({ count: 'exact' })
+    .eq('id', customerId)
+  if (error) throw error
+  if (count === 0) throw new Error('Sin permiso para eliminar. Ejecuta la migración 003 en Supabase.')
+}
+
 export async function createCustomer(name: string, phone: string): Promise<Customer> {
   const supabase = await createClient()
   const { data, error } = await supabase
