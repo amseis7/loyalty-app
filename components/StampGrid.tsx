@@ -18,10 +18,10 @@ export default function StampGrid({ activeStamps, total }: StampGridProps) {
             className={`
               aspect-square rounded-full flex items-center justify-center text-xl
               ${filled
-                ? 'bg-blue-700 text-white'
-                : 'border-2 border-dashed border-slate-600 text-slate-600 opacity-40'
+                ? 'bg-amber-500 text-white shadow-md shadow-amber-900/50'
+                : 'border-2 border-dashed border-stone-600 text-stone-500 bg-stone-800/50'
               }
-              ${isLastSlot && !filled ? 'border-amber-500' : ''}
+              ${isLastSlot && !filled ? 'border-amber-400 text-amber-400' : ''}
             `}
           >
             {filled ? '☕' : isLastSlot ? '🎁' : '○'}

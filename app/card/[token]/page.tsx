@@ -20,24 +20,24 @@ export default async function CardPage({ params }: CardPageProps) {
   const cardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/card/${token}`
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-stone-900 text-white flex items-center justify-center px-4">
       <div className="relative w-full max-w-sm text-center">
         <StampConfetti token={token} activeStamps={customer.activeStamps} />
         <CardActions cardUrl={cardUrl} customerName={customer.name} />
 
         {/* Header */}
         <div className="mb-6">
-          <p className="text-xs text-slate-500 uppercase tracking-widest mb-1">
+          <p className="text-xs text-amber-600 uppercase tracking-widest mb-1">
             Tarjeta de fidelidad
           </p>
           <h1 className="text-2xl font-bold">{customer.name}</h1>
-          <p className="text-slate-500 text-sm mt-1">☕ {businessName}</p>
+          <p className="text-stone-400 text-sm mt-1">☕ {businessName}</p>
         </div>
 
         {/* Short code */}
         {customer.short_code && (
-          <div className="bg-slate-800 rounded-xl px-6 py-3 mb-6 inline-block">
-            <p className="text-slate-500 text-xs uppercase tracking-widest mb-1">Tu código</p>
+          <div className="bg-stone-800 rounded-xl px-6 py-3 mb-6 inline-block">
+            <p className="text-stone-500 text-xs uppercase tracking-widest mb-1">Tu código</p>
             <p className="text-white text-3xl font-black tracking-[0.3em]">
               {customer.short_code}
             </p>
@@ -62,9 +62,9 @@ export default async function CardPage({ params }: CardPageProps) {
             </div>
           </div>
         ) : (
-          <div className="bg-slate-800 rounded-xl p-4 mb-4">
-            <p className="text-3xl font-black text-blue-400">{customer.activeStamps} / 10</p>
-            <p className="text-slate-400 text-sm mt-1">
+          <div className="bg-stone-800 rounded-xl p-4 mb-4">
+            <p className="text-3xl font-black text-amber-400">{customer.activeStamps} / 10</p>
+            <p className="text-stone-400 text-sm mt-1">
               Te {remaining === 1 ? 'falta' : 'faltan'}{' '}
               <strong className="text-white">{remaining} {remaining === 1 ? 'sello' : 'sellos'}</strong>{' '}
               para tu café gratis
@@ -72,7 +72,7 @@ export default async function CardPage({ params }: CardPageProps) {
           </div>
         )}
 
-        <p className="text-slate-600 text-xs">
+        <p className="text-stone-600 text-xs">
           Muestra esta pantalla o dile tu código al cajero
         </p>
       </div>
