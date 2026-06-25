@@ -22,7 +22,7 @@ export default async function CardPage({ params }: CardPageProps) {
   return (
     <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center px-4">
       <div className="relative w-full max-w-sm text-center">
-        {customer.stamp_animation_pending && <StampConfetti token={token} />}
+        <StampConfetti token={token} activeStamps={customer.activeStamps} />
         <CardActions cardUrl={cardUrl} customerName={customer.name} />
 
         {/* Header */}

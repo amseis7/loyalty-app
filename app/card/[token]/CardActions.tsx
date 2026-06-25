@@ -34,13 +34,6 @@ export default function CardActions({ cardUrl, customerName }: CardActionsProps)
 
   return (
     <>
-      <button
-        onClick={() => router.back()}
-        className="absolute top-4 left-4 text-slate-500 hover:text-white transition-colors flex items-center gap-1 text-sm"
-      >
-        ← Volver
-      </button>
-
       <div className="mt-6 border-t border-slate-800 pt-6 flex flex-col items-center gap-3">
         <p className="text-slate-500 text-xs uppercase tracking-widest">Guarda tu tarjeta</p>
         <div id="card-qr" className="bg-white p-3 rounded-xl">
