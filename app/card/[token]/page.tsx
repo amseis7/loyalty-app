@@ -19,8 +19,38 @@ export default async function CardPage({ params }: CardPageProps) {
 
   const cardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/card/${token}`
 
+  const bgItems = [
+    { e: '☕', t: '4%',  l: '6%',  r: '8deg',  s: '1.4rem' },
+    { e: '🫘', t: '8%',  l: '78%', r: '-15deg', s: '1rem'   },
+    { e: '🥐', t: '14%', l: '88%', r: '10deg',  s: '1.2rem' },
+    { e: '🧁', t: '22%', l: '3%',  r: '-8deg',  s: '1rem'   },
+    { e: '☕', t: '30%', l: '91%', r: '20deg',  s: '1rem'   },
+    { e: '🍩', t: '38%', l: '10%', r: '5deg',   s: '1.1rem' },
+    { e: '🫖', t: '45%', l: '82%', r: '-12deg', s: '1.3rem' },
+    { e: '🫘', t: '52%', l: '2%',  r: '18deg',  s: '0.9rem' },
+    { e: '🥐', t: '60%', l: '87%', r: '-5deg',  s: '1rem'   },
+    { e: '🧁', t: '67%', l: '7%',  r: '12deg',  s: '1.2rem' },
+    { e: '☕', t: '74%', l: '80%', r: '6deg',   s: '1.1rem' },
+    { e: '🍩', t: '80%', l: '4%',  r: '-18deg', s: '1rem'   },
+    { e: '🫖', t: '86%', l: '85%', r: '14deg',  s: '0.9rem' },
+    { e: '🫘', t: '92%', l: '12%', r: '-6deg',  s: '1.1rem' },
+    { e: '🥐', t: '96%', l: '70%', r: '9deg',   s: '1rem'   },
+  ]
+
   return (
     <div className="min-h-screen bg-stone-900 text-white flex items-center justify-center px-4">
+      {/* Café background pattern */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
+        {bgItems.map((item, i) => (
+          <span
+            key={i}
+            className="absolute opacity-[0.07]"
+            style={{ top: item.t, left: item.l, fontSize: item.s, transform: `rotate(${item.r})` }}
+          >
+            {item.e}
+          </span>
+        ))}
+      </div>
       <div className="relative w-full max-w-sm text-center">
         <StampConfetti token={token} activeStamps={customer.activeStamps} />
         <CardActions cardUrl={cardUrl} customerName={customer.name} />
