@@ -8,6 +8,8 @@ interface CardPageProps {
   params: Promise<{ token: string }>
 }
 
+const BG_IMAGE = 'https://images.unsplash.com/photo-1598515502440-30a8cf591be9?w=1920&q=80&fit=crop&auto=format'
+
 export default async function CardPage({ params }: CardPageProps) {
   const { token } = await params
   const customer = await findCustomerByToken(token)
@@ -19,45 +21,21 @@ export default async function CardPage({ params }: CardPageProps) {
 
   const cardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/card/${token}`
 
-  const bgItems = [
-    { e: '☕', t: '4%',  l: '6%',  r: '8deg',  s: '1.8rem' },
-    { e: '🫘', t: '8%',  l: '78%', r: '-15deg', s: '1.4rem' },
-    { e: '🥐', t: '14%', l: '88%', r: '10deg',  s: '1.6rem' },
-    { e: '🧁', t: '22%', l: '3%',  r: '-8deg',  s: '1.4rem' },
-    { e: '☕', t: '30%', l: '91%', r: '20deg',  s: '1.5rem' },
-    { e: '🍩', t: '38%', l: '10%', r: '5deg',   s: '1.6rem' },
-    { e: '🫖', t: '45%', l: '82%', r: '-12deg', s: '1.8rem' },
-    { e: '🫘', t: '52%', l: '2%',  r: '18deg',  s: '1.3rem' },
-    { e: '🥐', t: '60%', l: '87%', r: '-5deg',  s: '1.5rem' },
-    { e: '🧁', t: '67%', l: '7%',  r: '12deg',  s: '1.6rem' },
-    { e: '☕', t: '74%', l: '80%', r: '6deg',   s: '1.5rem' },
-    { e: '🍩', t: '80%', l: '4%',  r: '-18deg', s: '1.4rem' },
-    { e: '🫖', t: '86%', l: '85%', r: '14deg',  s: '1.3rem' },
-    { e: '🫘', t: '92%', l: '12%', r: '-6deg',  s: '1.5rem' },
-    { e: '🥐', t: '96%', l: '70%', r: '9deg',   s: '1.4rem' },
-  ]
-
   return (
-    <div className="min-h-screen bg-stone-900 text-white flex items-center justify-center px-4">
-      {/* Café background pattern */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
-        {bgItems.map((item, i) => (
-          <span
-            key={i}
-            className="absolute opacity-[0.15]"
-            style={{ top: item.t, left: item.l, fontSize: item.s, transform: `rotate(${item.r})` }}
-          >
-            {item.e}
-          </span>
-        ))}
-      </div>
-      <div className="relative w-full max-w-sm text-center">
+    <div
+      className="min-h-screen text-white flex items-center justify-center px-4 relative"
+      style={{ backgroundImage: `url(${BG_IMAGE})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-stone-900/80" />
+
+      <div className="relative z-10 w-full max-w-sm text-center">
         <StampConfetti token={token} activeStamps={customer.activeStamps} />
         <CardActions cardUrl={cardUrl} customerName={customer.name} />
 
         {/* Header */}
         <div className="mb-6">
-          <p className="text-xs text-amber-600 uppercase tracking-widest mb-1">
+          <p className="text-xs text-amber-500 uppercase tracking-widest mb-1">
             Tarjeta de fidelidad
           </p>
           <h1 className="text-2xl font-bold">{customer.name}</h1>
@@ -66,7 +44,7 @@ export default async function CardPage({ params }: CardPageProps) {
 
         {/* Short code */}
         {customer.short_code && (
-          <div className="bg-stone-800 rounded-xl px-6 py-3 mb-6 inline-block">
+          <div className="bg-stone-800/80 backdrop-blur-sm rounded-xl px-6 py-3 mb-6 inline-block">
             <p className="text-stone-500 text-xs uppercase tracking-widest mb-1">Tu código</p>
             <p className="text-white text-3xl font-black tracking-[0.3em]">
               {customer.short_code}
@@ -81,7 +59,7 @@ export default async function CardPage({ params }: CardPageProps) {
 
         {/* Progress */}
         {customer.rewardReady ? (
-          <div className="bg-green-900 border border-green-600 rounded-xl p-5 mb-4">
+          <div className="bg-green-900/80 backdrop-blur-sm border border-green-600 rounded-xl p-5 mb-4">
             <div className="text-3xl mb-2">🎉</div>
             <p className="text-green-300 font-bold text-lg">¡Tarjeta completa!</p>
             <p className="text-green-400 text-sm mt-1">
@@ -92,7 +70,7 @@ export default async function CardPage({ params }: CardPageProps) {
             </div>
           </div>
         ) : (
-          <div className="bg-stone-800 rounded-xl p-4 mb-4">
+          <div className="bg-stone-800/80 backdrop-blur-sm rounded-xl p-4 mb-4">
             <p className="text-3xl font-black text-amber-400">{customer.activeStamps} / 10</p>
             <p className="text-stone-400 text-sm mt-1">
               Te {remaining === 1 ? 'falta' : 'faltan'}{' '}
@@ -102,11 +80,10 @@ export default async function CardPage({ params }: CardPageProps) {
           </div>
         )}
 
-        <p className="text-stone-600 text-xs">
+        <p className="text-stone-500 text-xs">
           Muestra esta pantalla o dile tu código al cajero
         </p>
       </div>
     </div>
   )
-
 }
